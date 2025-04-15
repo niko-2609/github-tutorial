@@ -1,0 +1,42 @@
+name: Prevent PR Merge Without Version Update
+
+on:
+  pull_request:
+    paths:
+      - '**' # Monitor all changes
+    branches:
+      - main # Or your default branch
+
+jobs:
+  check-version-updated:
+    runs-on: ubuntu-latest
+    name: Check if version has been updated
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0  # Needed to fetch base commit for diff
+
+      - name: Get base branch version
+        id: base_version
+        run: |
+          git fetch origin ${{ github.base_ref }}
+          git show origin/${{ github.base_ref }}:version/build.json > base_build.json
+          echo "BASE_VERSION=$(jq -r .version base_build.json)" >> $GITHUB_ENV
+
+      - name: Get head branch version
+        id: head_version
+        run: |
+          echo "HEAD_VERSION=$(jq -r .version version/build.json)" >> $GITHUB_ENV
+
+      - name: Compare versions
+        run: |
+          echo "Base: $BASE_VERSION"
+          echo "Head: $HEAD_VERSION"
+          if [ "$BASE_VERSION" = "$HEAD_VERSION" ]; then
+            echo "❌ Version has not been updated in version/build.json"
+            exit 1
+          else
+            echo "✅ Version is updated"
+          fi
