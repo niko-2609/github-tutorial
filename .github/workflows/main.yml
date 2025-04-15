@@ -1,5 +1,4 @@
-name: Prevent PR Merge Without Version Update
-
+name: Version Check
 on:
   pull_request:
     paths:
@@ -10,7 +9,7 @@ on:
 jobs:
   check-version-updated:
     runs-on: ubuntu-latest
-    name: Check if version has been updated
+    name: Check if version is updated
 
     steps:
       - name: Checkout code

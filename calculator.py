@@ -18,6 +18,7 @@ def main():
     print("2. Subtract")
     print("3. Multiply")
     print("4. Divide")
+    print("5. Exit")
     
     choice = input("Enter choice (1/2/3/4): ")
     num1 = float(input("Enter first number: "))
@@ -31,6 +32,9 @@ def main():
         print(f"Result: {multiply(num1, num2)}")
     elif choice == '4':
         print(f"Result: {divide(num1, num2)}")
+    elif choice == '5':
+        print("Exiting...")
+        return
     else:
         print("Invalid choice")
 
